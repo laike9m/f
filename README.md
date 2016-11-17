@@ -13,10 +13,12 @@ Rikka: Well, **f** is for you!
 ```python
 import f
 
+
 # This will log to temp.log with mode 'w'
 @f
 def inner():
     print('Some really really really long stuff....')
+
 
 # This will log to important.log with mode 'a'
 @f('important.log', 'a')
