@@ -1,5 +1,7 @@
 import sys
 
+__author__ = 'laike9m <laike9m@gmail.com>'
+
 
 DEFAULT_FILE = 'tmp.log'
 DEFAULT_MODE = 'w'

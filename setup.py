@@ -1,11 +1,26 @@
 from setuptools import setup
 
-setup(name='f', version='0.0.1', py_modules=['f'],
-      description='Quick-and-dirty debugging output for tired programmers',
-      author='laike9m', author_email='laike9m@gmail.com',
+setup(name='p2f',
+      version='0.0.1',
+      py_modules=['f'],
+      description='Log to a file, quick and dirty',
+      author='laike9m',
+      author_email='laike9m@gmail.com',
       license='Apache License 2.0',
-      url='http://github.com/laike9m/f', classifiers=[
+      url='http://github.com/laike9m/f',
+      classifiers=[
           'Programming Language :: Python',
           'Intended Audience :: Developers',
-          'License :: OSI Approved :: Apache Software License'
+          'License :: OSI Approved :: Apache Software License',
+          'Programming Language :: Python',
+          'Programming Language :: Python :: 2',
+          'Programming Language :: Python :: 2.6',
+          'Programming Language :: Python :: 2.7',
+          'Programming Language :: Python :: 3',
+          'Programming Language :: Python :: 3.3',
+          'Programming Language :: Python :: 3.4',
+          'Programming Language :: Python :: 3.5',
+          'Topic :: Software Development :: Libraries :: Python Modules',
+          'Programming Language :: Python :: Implementation :: PyPy',
+          'Programming Language :: Python :: Implementation :: CPython',
       ])
