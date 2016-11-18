@@ -1,7 +1,6 @@
 import sys
 
 
-# TODO: stderr?
 DEFAULT_FILE = 'tmp.log'
 DEFAULT_MODE = 'w'
 

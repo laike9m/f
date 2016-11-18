@@ -27,7 +27,7 @@ def inner():
 ```
 
 ## FAQ
-* What does it do? Will using `@f` do anything dangerous?   
+* What does it do? Will `@f` do anything dangerous?   
 All it does is replacing `sys.stdout` with an opened file within your function,
 and restore when function ends.
 
