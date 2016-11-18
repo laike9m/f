@@ -2,21 +2,27 @@ import sys
 
 
 # TODO: stderr?
+DEFAULT_FILE = 'tmp.log'
+DEFAULT_MODE = 'w'
+
 
 class F:
     __name__ = 'F'
+    DEFAULT_FILE = DEFAULT_FILE
+    DEFAULT_MODE = DEFAULT_MODE
 
-    def __call__(self, *args):
+    def __call__(self, filename=DEFAULT_FILE, mode=DEFAULT_MODE):
         """Check argument and return the correct decorator.
 
-        If args[0] is a function, then we assume f is used without argument:
+        If the first argument is a function, then we assume f is called without
+        argument:
 
             @f
             def function():
                 ...
 
-        If args[0] is not a function, we assume f is called with one or two
-        arguments:
+        If the first argument is not a function, we assume f is called with one
+        or two arguments:
 
             @f('really_import.log')
             def function():
@@ -31,15 +37,12 @@ class F:
         import functools
         import sys
 
-        if not args:
-            raise TypeError(('f should be used as decorator, '
-                             'not called directly'))
-        elif callable(args[0]):
-            function = args[0]
+        if callable(filename):
+            function = filename
 
             @functools.wraps(function)
             def decorator(*args, **kwargs):
-                with open('temp.log', 'w') as log_file:
+                with open(self.DEFAULT_FILE, self.DEFAULT_MODE) as log_file:
                     sys.stdout = log_file
                     result = function(*args, **kwargs)
                     sys.stdout = sys.__stdout__
@@ -47,14 +50,6 @@ class F:
 
             return decorator
         else:
-            if len(args) == 1:
-                filename = args[0]
-                mode = 'w'
-            elif len(args) == 2:
-                filename, mode = args
-            else:
-                raise TypeError('f accepts one or two arguments.')
-
             def decorator(function):
                 @functools.wraps(function)
                 def wrapper(*args, **kwargs):
