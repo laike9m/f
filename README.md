@@ -25,7 +25,7 @@ def inner():
     print('Yet another some really really really long stuff....')
 ```
 
-# Install
+## Install
 ```bash
 pip install p2f
 ```
