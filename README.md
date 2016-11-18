@@ -14,12 +14,12 @@ Rikka: Well, **f** is for you!
 import f
 
 
-@f    # This will log to tmp.log with mode 'w'
+@f    # This will save the output of print() to tmp.log with mode 'w'
 def inner():
     print('Some really really really long stuff....')
 
 
-# This will log to important.log with mode 'a'
+# This will save the output of print() to important.log with mode 'a'
 @f(filename='important.log', mode='a')
 def inner():
     print('Yet another some really really really long stuff....')
