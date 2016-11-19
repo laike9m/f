@@ -9,20 +9,40 @@ Kouhei: But I don't need those `print` when I'm finished, they are just for quic
 Rikka: Well, **f** is for you!
 
 ## Usage
-
+###Simple decorator
 ```python
 import f
 
-
 @f    # This will save the output of print() to tmp.log with mode 'w'
 def inner():
-    print('Some really really really long stuff....')
+    print('whatever')
+```
 
-
+### Set filename and mode
+```python
 # This will save the output of print() to important.log with mode 'a'
 @f(filename='important.log', mode='a')
 def inner():
-    print('Yet another some really really really long stuff....')
+    print('whatever')
+```
+
+### Used as context manager
+```python
+with f:
+    print('whatever')
+
+with f(filename='important.log', mode='a'):
+    print('whatever')
+```
+
+### Log to both file and console
+```python
+@f(filename='important.log', mode='a', stdout=True)
+def inner():
+    print('whatever')
+
+with f(filename='important.log', mode='a', stdout=True):
+    print('whatever')
 ```
 
 ## Install

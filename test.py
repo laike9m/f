@@ -67,6 +67,17 @@ class TestF(unittest.TestCase):
 
         self.assert_equal(TMP_LOG, original_stdout)
 
+    def test_f_with_logger(self):
+        original_stdout = sys.stdout
+        self.common_test(f(T_LOG, 'w', True)(self.inner), T_LOG)
+
+        with f(filename=T_LOG, mode='a', stdout=True):
+            assert self.inner() == RETURN_VALUE
+
+        self.assert_equal(T_LOG, original_stdout, TEXT * 2)
+
+    # TODO: test print with arguments like flush=True
+
 
 if __name__ == '__main__':
     unittest.main()

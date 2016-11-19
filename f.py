@@ -7,12 +7,30 @@ DEFAULT_FILE = 'tmp.log'
 DEFAULT_MODE = 'w'
 
 
+class Logger(object):
+    _sys = __import__('sys')
+
+    def __init__(self, filename, mode):
+        self.terminal = self._sys.__stdout__
+        self.log = open(filename, mode)
+
+    def write(self, message):
+        self.terminal.write(message)
+        self.log.write(message)
+
+    def close(self):
+        self.log.close()
+
+
 class F(object):
-    # Prior to 3.4, when module is destroyed, __dict__ values are set to
-    # None, so import here. See http://stackoverflow.com/questions/25649676
+    # Prior to 3.4, when module is destroyed, module's __dict__ values are set
+    # to None, which affects imported modules like sys(which is in globals()),
+    # so import them here.
+    # See http://stackoverflow.com/questions/25649676
     __name__ = 'F'
     _sys = __import__('sys')
     _functools = __import__('functools')
+    _Logger = Logger
     DEFAULT_FILE = DEFAULT_FILE
     DEFAULT_MODE = DEFAULT_MODE
 
@@ -60,29 +78,32 @@ class F(object):
         else:
             # record outer instance to be used inside below class
             F_inst = self
+            Logger = self._Logger
 
-            class DeccoratorWithContextManager(object):
+            class DecoratorWithContextManager(object):
                 """
                 This class is both a class decorator and a context manager.
                 """
                 def __call__(self, function):
                     @F_inst._functools.wraps(function)
                     def wrapper(*args, **kwargs):
-                        with open(filename, mode) as log_file:
-                            F_inst._sys.stdout = log_file
-                            result = function(*args, **kwargs)
-                            F_inst._sys.stdout = F_inst._sys.__stdout__
-                            return result
+                        F_inst._sys.stdout = Logger(filename, mode) \
+                            if stdout else open(filename, mode)
+                        result = function(*args, **kwargs)
+                        F_inst._sys.stdout.close()
+                        F_inst._sys.stdout = F_inst._sys.__stdout__
+                        return result
                     return wrapper
 
                 def __enter__(self):
-                    F_inst._sys.stdout = open(filename, mode)
+                    F_inst._sys.stdout = Logger(filename, mode) \
+                        if stdout else open(filename, mode)
 
                 def __exit__(self, exception_type, exception_value, traceback):
                     F_inst._sys.stdout.close()
                     F_inst._sys.stdout = F_inst._sys.__stdout__
 
-            return DeccoratorWithContextManager()
+            return DecoratorWithContextManager()
 
 
 sys.modules['f'] = F()
