@@ -9,10 +9,21 @@ DEFAULT_MODE = 'w'
 
 class F:
     __name__ = 'F'
+    _sys = __import__('sys')
+    _functools = __import__('functools')
     DEFAULT_FILE = DEFAULT_FILE
     DEFAULT_MODE = DEFAULT_MODE
 
-    def __call__(self, filename=DEFAULT_FILE, mode=DEFAULT_MODE):
+    # TODO: to stdout
+    def __enter__(self, filename=DEFAULT_FILE, mode=DEFAULT_MODE,
+                  stdout=False):
+        self._sys.stdout = open(filename, mode)
+
+    def __exit__(self, exception_type, exception_value, traceback):
+        self._sys.stdout.close()
+        self._sys.stdout = self._sys.__stdout__
+
+    def __call__(self, filename=DEFAULT_FILE, mode=DEFAULT_MODE, stdout=False):
         """Check argument and return the correct decorator.
 
         If the first argument is a function, then we assume f is called without
@@ -35,29 +46,26 @@ class F:
         """
         # Prior to 3.4, when module is destroyed, __dict__ values are set to
         # None, so import here. See http://stackoverflow.com/questions/25649676
-        import functools
-        import sys
-
         if callable(filename):
             function = filename
 
-            @functools.wraps(function)
+            @self._functools.wraps(function)
             def decorator(*args, **kwargs):
                 with open(self.DEFAULT_FILE, self.DEFAULT_MODE) as log_file:
-                    sys.stdout = log_file
+                    self._sys.stdout = log_file
                     result = function(*args, **kwargs)
-                    sys.stdout = sys.__stdout__
+                    self._sys.stdout = self._sys.__stdout__
                     return result
 
             return decorator
         else:
             def decorator(function):
-                @functools.wraps(function)
+                @self._functools.wraps(function)
                 def wrapper(*args, **kwargs):
                     with open(filename, mode) as log_file:
-                        sys.stdout = log_file
+                        self._sys.stdout = log_file
                         result = function(*args, **kwargs)
-                        sys.stdout = sys.__stdout__
+                        self._sys.stdout = self._sys.__stdout__
                         return result
 
                 return wrapper
