@@ -8,6 +8,7 @@ import f
 TEXT = 'Today is a good day.\nTomorrow is another good day.\n'
 TMP_LOG = 'tmp.log'
 T_LOG = 't.log'
+RETURN_VALUE = 1
 
 
 class TestF(unittest.TestCase):
@@ -21,6 +22,7 @@ class TestF(unittest.TestCase):
     def inner():
         print('Today is a good day.')
         print('Tomorrow is another good day.')
+        return RETURN_VALUE
 
     def assert_equal(self, filename, original_stdout, text=TEXT):
         with open(filename) as log_file:
@@ -28,9 +30,9 @@ class TestF(unittest.TestCase):
 
         assert original_stdout is sys.stdout
 
-    def common_test(self, function, filename, text=TEXT):
+    def common_test(self, function, filename, text=TEXT, rt=RETURN_VALUE):
         original_stdout = sys.stdout
-        function()
+        assert function() == rt
         self.assert_equal(filename, original_stdout, text)
 
     def test_f_without_argument(self):
@@ -56,12 +58,12 @@ class TestF(unittest.TestCase):
     def test_f_as_context_manager(self):
         original_stdout = sys.stdout
         with f:
-            self.inner()
+            assert self.inner() == RETURN_VALUE
 
         self.assert_equal(TMP_LOG, original_stdout)
 
         with f(filename=T_LOG, mode='a'):
-            self.inner()
+            assert self.inner() == RETURN_VALUE
 
         self.assert_equal(TMP_LOG, original_stdout)
 
