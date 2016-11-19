@@ -9,7 +9,7 @@ Kouhei: But I don't need those `print` when I'm finished, they are just for quic
 Rikka: Well, **f** is for you!
 
 ## Usage
-###Simple decorator
+###Save the output to file wth a simple decorator
 ```python
 import f
 
@@ -18,7 +18,7 @@ def inner():
     print('whatever')
 ```
 
-### Set filename and mode
+### Set logfile's name and mode
 ```python
 # This will save the output of print() to important.log with mode 'a'
 @f(filename='important.log', mode='a')
