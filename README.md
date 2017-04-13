@@ -9,7 +9,7 @@ Kouhei: But I don't need those `print` when I'm finished, they are just for quic
 Rikka: Well, **f** is for you!
 
 ## Usage
-###Save the output to a file with a simple decorator
+### Save the output to a file with a simple decorator
 ```python
 import f
 
